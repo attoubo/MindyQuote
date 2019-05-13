@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <title>addquote</title>
+</head>
+<body>
+    <!-- <p> -->
+        <div class="jumbotron text-center">
+            <h1>
+                Add New Quote Here
+            </h1>
+        </div>
+        
+    <!-- <div class="p-box"> -->
+
+        <div class="container">
+            <form id="" method="POST" action="/result">
+                <div class="form-group">
+                <label for="comment"><strong>Copy Your Quote :</strong></label>
+                <textarea class="form-control" rows="4" id="comment" name="quote" placeholder="Copy Your Quote Here" style="width:70%;resize:vertical;"></textarea>                
+                <br>
+                    
+                <label for="text"><strong>Author Name : </strong></label><br>
+                <input name="author_name" type="text" placeholder="Enter Author Name" class="" style="height:24px;">
+                <br><br>
+
+                <label for="text"><strong>Date of editing :</strong> </label><br>
+                <input name="editing_date" type="text" style="height:24px;resize:vertical;" placeholder="Enter Editing Date" >
+                <br><br>
+
+                <label for="text"><strong>Topic : </strong></label><br>
+                <input name="topic" type="text" style="height:24px;resize:vertical;" placeholder="Enter Quote's Topic" >
+                
+                <br>
+                <br>
+                    <input type="submit" value="Submit" class="btn btn-info"/>
+
+                </div>
+                
+            </form>
+        </div>
+    <!-- </div> -->
+</body>
+</html>

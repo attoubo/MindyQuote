@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+
+    <title>my QtApps</title>
+</head>
+<body>
+
+
+    <div class="jumbotron text-center">
+        <br>
+        <br>
+        <h1>Let's Enjoy MindyQuote</h1>
+        <br>
+        <br>
+
+        <form method="POST" class="">
+            <button formaction="/add" class="btn btn-info">Add New Quote</button>
+            <button formaction="/check" class="btn btn-info">Check All Quotes</button>
+        </form>
+        <br>
+    </div>
+
+    <br>
+
+    <div class="" style="text-align:center;">
+        <h4 style="text-decoration: underline">
+            Quote Of The Day
+        </h4>
+        <br>
+        <p style="font-family:'Palatino Linotype','Book Antiqua', Palatino, serif ">
+            <strong>``</strong><%= obj[0].quote %><strong>``</strong>
+            <h6>- <%= obj[0].auth_name %> </h6>
+        </p>
+    </div>
+        
+</body>
+</html>
