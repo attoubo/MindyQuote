@@ -2,9 +2,9 @@
 var express = require("express");
 var bodyParser = require('body-parser');
 // var mysql = require('mysql');
-var { Client } = require("pg");
+var { Client, Pool } = require("pg");
 var app = express();
-var forQuote, forAthName, forEditDate, forRef, forTest;
+var forQuote, forAthName, forEditDate, forTop, nombre, len;
 
 app.use( bodyParser.json() );
 app.set('view engine', 'ejs');
@@ -30,14 +30,24 @@ var port = process.env.PORT || 8080
 //   }
 // })
 
-var client = new Client({
+var pool = new Pool({
     host: 'ec2-23-23-92-204.compute-1.amazonaws.com',
     user: 'xvelocehkskyyb',
     password: '7551d44d8fbd95569508d646c24ae88cb2673229c91e404f66c420c1530f7c1a',
     database: 'd3qubtir22t6uq',
     port: 5432,
     ssl: true
-  });
+})
+
+
+// var client = new Client({
+//     host: 'ec2-23-23-92-204.compute-1.amazonaws.com',
+//     user: 'xvelocehkskyyb',
+//     password: '7551d44d8fbd95569508d646c24ae88cb2673229c91e404f66c420c1530f7c1a',
+//     database: 'd3qubtir22t6uq',
+//     port: 5432,
+//     ssl: true
+//   });
 
 
 
@@ -54,35 +64,6 @@ app.post("/", function(req, resp){
 
 
 
-
-app.post("/begin", function(req, resp) {
-
-  client.connect((err, client, done) => {
-  var squery = "SELECT quote_id FROM quote_table";
-  var secSql = "SELECT quote, auth_name FROM  quote_table WHERE quote_id=$1";
-  client.query(squery, function (err, resultat) {
-    if (err) throw err;
-
-    for(var i=0; i<resultat.rows.length; i++) {
-      var len = resultat.rows.length;
-        var nombre = Math.floor(Math.random() * Math.floor(len));
-    };
-
-    client.query(secSql, [nombre], function(err, tableau) {
-
-      // console.log(tableau.rows);
-      var obj = JSON.parse(JSON.stringify(tableau.rows));
-      resp.render('beginningpage', {
-          obj: obj,
-          title:'beginningpage',
-      });
-      // console.log(obj[0].quote);
-    });
-
-  });
-});
-
-});
 
 
 
@@ -104,7 +85,7 @@ app.post("/result", function(req, resp) {
 
     var sql = "INSERT INTO quote_table (quote, auth_name, edit_date, topics) VALUES ( $1, $2, $3, $4)";
 
-    client.query(sql, [forQuote, forAthName, forEditDate, forTop], function (err, result, fields) {
+    pool.query(sql, [forQuote, forAthName, forEditDate, forTop], function (err, result, fields) {
         if (!!err) {
             console.log('error');
         } else {
@@ -126,7 +107,7 @@ app.post('/check', function(req, resp) {
   
   // client.connect((err, client, done) => {
     var sql = "SELECT * FROM quote_table";
-    client.query(sql, function (err, result) {
+    pool.query(sql, function (err, result) {
         if (err) {
             console.log('error');
         } else {
@@ -145,14 +126,41 @@ app.post('/check', function(req, resp) {
 
 
 
+app.post("/begin", function(req, resp) {
+
+  pool.connect((err, client, done) => {
+  var squery = "SELECT quote_id FROM quote_table";
+  var secSql = "SELECT quote, auth_name FROM  quote_table WHERE quote_id=$1";
+  pool.query(squery, function (err, resultat) {
+    if (err) throw err;
+
+      len = resultat.rowCount;
+      nombre = Math.floor(Math.random() * ((len+1) - 1) + 1);
+
+    pool.query(secSql, [nombre], function(err, tableau) {
+      // console.log(tableau.rows);
+      var obj = JSON.parse(JSON.stringify(tableau.rows));
+      resp.render('beginningpage', {
+          obj: obj,
+          title:'beginningpage',
+      });
+    });
+  });
+});
+});
+
+
+
+
+
 
 app.get('/quote/:getId', function(req, resp) {
   var forId = req.params.getId;
   forTest = 6;
-  client.connect((err, client, done) => {
+  pool.connect((err, client, done) => {
     // console.log(forId);
   var thirdSql = "SELECT quote, auth_name, edit_date, topics FROM quote_table WHERE quote_id=$1";
-  client.query(thirdSql, [forId],function (err, result) {
+    pool.query(thirdSql, [forId],function (err, result) {
       // console.log(forTest)
       if (err) throw err;
       resp.send(result.rows);
@@ -170,9 +178,9 @@ app.get('/quote/:getId', function(req, resp) {
 app.get('/quotes/:get', function(req, resp) {
     var numb = parseInt(req.params.get, 10);
 
-    client.connect((err, client, done) => {
+    pool.connect((err, client, done) => {
     var sql = "SELECT * FROM quote_table LIMIT $1";
-    client.query(sql, [numb], function (err, result) {
+    pool.query(sql, [numb], function (err, result) {
       if (err) throw err;
       resp.send(result.rows);
       // console.log("successfull");
@@ -191,10 +199,10 @@ app.get('/rand/:no', function(req, resp) {
   var numero = parseInt(req.params.no, 10);
   var tabl = [];
 
-  client.connect((err, client, done) => {
+  pool.connect((err, client, done) => {
   var sql = "SELECT quote_id FROM quote_table";
   var secSql = "SELECT quote, auth_name, edit_date, topic FROM  quote_table WHERE quote_id=$1";
-  client.query(sql, function (err, result) {
+  pool.query(sql, function (err, result) {
     if (err) throw err;
 
     for(var i=0; i<result.length; i++) {
@@ -204,7 +212,7 @@ app.get('/rand/:no', function(req, resp) {
       };
     };
 
-    client.query(secSql, [nombre], function(err, tableau) {
+    pool.query(secSql, [nombre], function(err, tableau) {
       resp.send(tableau);
     });
 
@@ -222,5 +230,5 @@ app.get('/rand/:no', function(req, resp) {
 // Server
 
 app.listen(port, function() {
-    console.log("Server is running !!")
+    console.log("Server is running !!");
 })
