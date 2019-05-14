@@ -15,20 +15,6 @@ app.use(bodyParser.urlencoded({ extended: false}));
 var port = process.env.PORT || 8080
 
 
-// var connection = mysql.createConnection({
-//   host: "localhost",
-//   user: "didi",
-//   password: "",
-//   database:"sampledb"
-// });
-
-// connection.connect(function(error) {
-//   if(!!error) {
-//     console.log('Error');
-//   } else {
-//     console.log('Connected')
-//   }
-// })
 
 var pool = new Pool({
     host: 'ec2-23-23-92-204.compute-1.amazonaws.com',
