@@ -44,9 +44,9 @@ app.get("/", function(req, resp){
 });
 
 
-app.post("/", function(req, resp){
-  resp.sendFile(__dirname + '/index.html'); 
-});
+// app.post("/", function(req, resp){
+//   resp.sendFile(__dirname + '/index.html'); 
+// });
 
 
 
@@ -69,13 +69,13 @@ app.post("/result", function(req, resp) {
 
     // console.log(forQuote);
 
-    var sql = "INSERT INTO quote_table (quote, auth_name, edit_date, topics) VALUES ( $1, $2, $3, $4)";
+    var sql = "INSERT INTO quote_table (quote, auth_name, edit_date, topic) VALUES ( $1, $2, $3, $4)";
 
     pool.query(sql, [forQuote, forAthName, forEditDate, forTop], function (err, result, fields) {
         if (!!err) {
-            console.log('error');
+            console.log("Error");
         } else {
-          // console.log(result);
+          console.log(fields);
           resp.render('savedpage');
           // console.log(result);
         }      
@@ -112,19 +112,21 @@ app.post('/check', function(req, resp) {
 
 
 
-app.post("/begin", function(req, resp) {
+app.get("/begin", function(req, resp) {
 
   pool.connect((err, client, done) => {
   var squery = "SELECT quote_id FROM quote_table";
   var secSql = "SELECT quote, auth_name FROM  quote_table WHERE quote_id=$1";
   pool.query(squery, function (err, resultat) {
     if (err) throw err;
+    console.log(resultat);
+    
 
       len = resultat.rowCount;
-      nombre = Math.floor(Math.random() * ((len+1) - 1) + 1);
+      nombre =  Math.floor(Math.random() * ((len+1) - 1) + 1);
 
     pool.query(secSql, [nombre], function(err, tableau) {
-      // console.log(tableau.rows);
+      console.log(tableau);
       var obj = JSON.parse(JSON.stringify(tableau.rows));
       resp.render('beginningpage', {
           obj: obj,
